@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IframeModule } from './iframe/iframe.module';
+import { IframeModule } from './modules/iframe/iframe.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [IframeModule],
+  imports: [
+  IframeModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
