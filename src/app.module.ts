@@ -1,14 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { IframeModule } from './modules/iframe/iframe.module';
 import { ConfigModule } from '@nestjs/config';
+import dbConfig from './common/persistence/db-config';
+import { PersistenceModule } from './common/persistence';
 
 @Module({
   imports: [
-  IframeModule,
+    ConfigModule.forRoot({
+      envFilePath:'.env',
+      load:[dbConfig],
+      isGlobal:true,
+    }),
+    PersistenceModule,
+    IframeModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

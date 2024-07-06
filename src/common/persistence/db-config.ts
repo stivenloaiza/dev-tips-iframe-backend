@@ -8,6 +8,8 @@ export default registerAs('dbConfig', () => {
       name: process.env.DB_NAME,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      srv : process.env.DB_SRV,
+      cluster : process.env.DB_CLUSTER,
     },
     env: process.env.NODE_ENV || 'local',
   };
