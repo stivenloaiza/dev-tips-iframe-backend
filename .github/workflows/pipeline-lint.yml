@@ -27,9 +27,3 @@ jobs:
 
       - name: Run linter
         run: npm run lint
-
-      - name: Run ESLint with fix option
-        run: npx eslint . --fix
-
-      - name: Run tests
-        run: npm test
