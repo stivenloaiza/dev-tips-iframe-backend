@@ -6,9 +6,7 @@ import { Iframe, IframeSchema } from './entities/iframe.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Iframe.name, 
-        schema: IframeSchema }]),
+    MongooseModule.forFeature([{ name: Iframe.name, schema: IframeSchema }]),
   ],
   controllers: [IframeController],
   providers: [IframeService],

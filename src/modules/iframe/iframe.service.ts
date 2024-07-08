@@ -5,6 +5,7 @@ import { UpdateIframeDto } from './dto/update-iframe.dto';
 @Injectable()
 export class IframeService {
   create(createIframeDto: CreateIframeDto) {
+    console.log(createIframeDto);
     return 'This action adds a new iframe';
   }
 
@@ -17,6 +18,7 @@ export class IframeService {
   }
 
   update(id: number, updateIframeDto: UpdateIframeDto) {
+    console.log(updateIframeDto);
     return `This action updates a #${id} iframe`;
   }
 

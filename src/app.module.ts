@@ -7,9 +7,9 @@ import { PersistenceModule } from './common/persistence';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:'.env',
-      load:[dbConfig],
-      isGlobal:true,
+      envFilePath: '.env',
+      load: [dbConfig],
+      isGlobal: true,
     }),
     PersistenceModule,
     IframeModule,
