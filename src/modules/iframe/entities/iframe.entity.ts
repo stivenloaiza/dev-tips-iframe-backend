@@ -1,13 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-
 @Schema({ timestamps: true })
 export class Iframe extends Document {
-
   @Prop({ required: true })
   user_id: number;
-  
+
   @Prop({ required: true })
   domain: string;
 
@@ -15,14 +13,13 @@ export class Iframe extends Document {
   seniority: string;
 
   @Prop({ required: true })
-  language:string;
+  language: string;
 
   @Prop()
-  color:string;
+  color: string;
 
   @Prop()
-  typography:string;
-  
+  typography: string;
 }
 
 export const IframeSchema = SchemaFactory.createForClass(Iframe);
