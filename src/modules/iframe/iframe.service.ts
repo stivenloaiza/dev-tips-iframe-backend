@@ -40,6 +40,7 @@ export class IframeService {
   }
 
   update(id: number, updateIframeDto: UpdateIframeDto) {
+    console.log(updateIframeDto);
     return `This action updates a #${id} iframe`;
   }
 
