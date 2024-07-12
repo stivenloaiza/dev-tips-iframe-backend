@@ -7,9 +7,9 @@ import { UpdateIframeDto } from './dto/update-iframe.dto';
 export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
 
-  @Post()
+  @Post('getIframe')
   create(@Body() createIframeDto: CreateIframeDto) {
-    return this.iframeService.create(createIframeDto);
+    return this.iframeService.createCodeIframe(createIframeDto);
   }
 
   @Get()
