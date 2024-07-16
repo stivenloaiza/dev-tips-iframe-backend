@@ -6,9 +6,8 @@ export class Iframe extends Document {
   @Prop({ required: true })
   api_key_user: string;
 
-   @Prop({ required: true })
-   iframe: string;
-
+  @Prop({ required: true })
+  iframe: string;
 }
 
 export const IframeSchema = SchemaFactory.createForClass(Iframe);

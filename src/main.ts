@@ -8,9 +8,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Iframe API')
-    .setDescription(
-      'API Iframe',
-    )
+    .setDescription('API Iframe')
     .setVersion('1.0')
     .addTag('team iframe')
     .build();
