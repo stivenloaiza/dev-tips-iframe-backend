@@ -4,32 +4,25 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateIframeDto {
   @IsString()
   @ApiProperty()
-  api_key_user: string;
+  apikey: string;
 
   @IsString()
   @ApiProperty()
   @IsOptional()
   domain: string;
 
-  // @IsString()
-  // @ApiProperty()
-  // seniority: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  seniority: string;
 
+  @IsOptional()
   @IsString()
   @ApiProperty()
   programmingLanguage: string;
 
-  // @IsString()
-  // @ApiProperty()
-  // language: string;
-
-  // @IsString()
-  // @ApiProperty()
-  // @ApiProperty()
-  // color: string;
-
-  // @IsString()
-  // @ApiProperty()
-  // @ApiProperty()
-  // typography: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  language: string;
 }
