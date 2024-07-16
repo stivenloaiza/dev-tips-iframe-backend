@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class Iframe extends Document {
   @Prop({ required: true })
-  api_key_user: string;
+  apikey: string;
 
   @Prop({ required: true })
   iframe: string;

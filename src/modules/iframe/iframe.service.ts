@@ -13,21 +13,38 @@ export class IframeService {
     private readonly httpService: HttpService,
   ) {}
   async createCodeIframe(createIframeDto: CreateIframeDto) {
-    const { api_key_user, programmingLanguage } = createIframeDto;
 
-    const htmlIframe = `<iframe id="inlineFrameExample" title="Inline Frame Example" width="3" height="200"
-    src="http://localhost:5173/${api_key_user}/${programmingLanguage}"> </iframe>`;
-
-    const iframe = {
-      api_key_user: api_key_user,
-      iframe: htmlIframe,
-    };
-
-    const createdIframe = new this.iframeModel(iframe);
-
-    await createdIframe.save();
-
-    return createdIframe;
+    const { apikey, programmingLanguage, seniority, language } = createIframeDto;
+    try {
+      let srcUrl = `http://localhost:5173/${apikey}`;
+      if (programmingLanguage) {
+        srcUrl += `/${programmingLanguage}`;
+      }
+      if (seniority) {
+        srcUrl += `/${seniority}`;
+      }
+      if (language) {
+        srcUrl += `/${language}`;
+      }
+    
+      const htmlIframe = `<iframe id="inlineFrameExample" title="Inline Frame Example" width="300" height="200" src="${srcUrl}"></iframe>`;
+    
+      const iframe = {
+        apikey: apikey, 
+        iframe: htmlIframe,
+      }
+  
+      const createdIframe = new this.iframeModel( iframe );
+  
+      await createdIframe.save(); 
+  
+      return createdIframe;
+    } catch (error) {
+      throw new HttpException(
+        `Error: ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async iframeforTheFront(apiKeyUser: string): Promise<any[]> {
