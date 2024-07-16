@@ -7,10 +7,8 @@ import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Iframe.name, 
-        schema: IframeSchema }]),
-        HttpModule
+    MongooseModule.forFeature([{ name: Iframe.name, schema: IframeSchema }]),
+    HttpModule,
   ],
   controllers: [IframeController],
   providers: [IframeService],

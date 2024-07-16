@@ -20,6 +20,11 @@ export class IframeController {
     return this.iframeService.createCodeIframe(createIframeDto);
   }
 
+  @Get('iframeForFront/:apikeyUser')
+  iframeForTheFront(@Param('apikeyUser') apiKeyUser: string) {
+    return this.iframeService.iframeforTheFront(apiKeyUser);
+  }
+
   @Get()
   findAll() {
     return this.iframeService.findAll();

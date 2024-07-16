@@ -8,9 +8,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Iframe API')
-    .setDescription(
-      'API Iframe',
-    )
+    .setDescription('API Iframe')
     .setVersion('1.0')
     .addTag('team iframe')
     .build();
@@ -20,6 +18,5 @@ async function bootstrap() {
   app.setGlobalPrefix('/v1/api');
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}/v1/api`);
-
 }
 bootstrap();
