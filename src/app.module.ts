@@ -3,6 +3,10 @@ import { IframeModule } from './modules/iframe/iframe.module';
 import { ConfigModule } from '@nestjs/config';
 import dbConfig from './common/persistence/db-config';
 import { PersistenceModule } from './common/persistence';
+import { HttpModule } from '@nestjs/axios';
+import { AuthService } from './common/auth/auth/auth.service';
+import { APP_GUARD } from '@nestjs/core';
+import { ApiKeyAuthGuard } from './common/auth/auth/auth.guard';
 
 @Module({
   imports: [
@@ -13,8 +17,13 @@ import { PersistenceModule } from './common/persistence';
     }),
     PersistenceModule,
     IframeModule,
+    HttpModule
   ],
   controllers: [],
-  providers: [],
+  providers: [ AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyAuthGuard,
+    },],
 })
 export class AppModule {}

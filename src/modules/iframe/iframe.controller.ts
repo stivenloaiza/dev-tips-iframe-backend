@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { IframeService } from './iframe.service';
 import { CreateIframeDto } from './dto/create-iframe.dto';
 import { UpdateIframeDto } from './dto/update-iframe.dto';
+import { ApiKeyAuthGuard } from 'src/common/auth/auth/auth.guard';
 
+@UseGuards(ApiKeyAuthGuard)
 @Controller('iframe')
 export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
