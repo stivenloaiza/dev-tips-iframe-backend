@@ -8,11 +8,8 @@ import dbConfig from './db-config';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: (configService: ConfigType<typeof dbConfig>) => {
-        const { db, env } = configService;
-        const uriDb =
-          env === 'local'
-            ? `${db.connection}${db.host}/${db.name}`
-            : `${db.srv}//${db.user}:${db.password}@${db.cluster}/${db.name}?retryWrites=true&w=majority`;
+        const { db } = configService;
+        const uriDb =`${db.srv}//${db.user}:${db.password}@${db.cluster}.vypajgk.mongodb.net/`;
         return {
           uri: uriDb,
         };
