@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Iframe } from './entities/iframe.entity';
 import { Model } from 'mongoose';
 import { HttpService } from '@nestjs/axios';
+import { response } from 'express';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class IframeService {
@@ -47,79 +49,64 @@ export class IframeService {
     }
   }
 
-  async iframeforTheFront(apiKeyUser: string): Promise<any[]> {
+   async iframeforTheFront(apiKey: string){
     try {
-      const dataForTip = {
-        level: '',
-        language: '',
-        programmingLanguage: '',
-      };
-
+   
       const dataForResponse = [];
 
       // TODO: cambiar URL
+      const urlUser = `${process.env.API_USER}/${apiKey}`
 
-      const userDataByApyKey = this.httpService
-        .post(
-          'http://localhost:3000',
-          { apikeyUser: apiKeyUser },
-          {
-            headers: {
-              'x-api-key': process.env.API_KEY_IFRAME,
-            },
-          },
-        )
-        .subscribe((response) => {
-          const data = response.data;
-          dataForTip.level = data.level;
-          dataForTip.language = data.language;
-          dataForTip.programmingLanguage = data.programmingLanguage;
-        });
+          const response = await firstValueFrom(
+            this.httpService.get(urlUser, {
+              headers: {
+                'x-api-key': process.env.API_KEY_IFRAME,
+              },
+            }),
+          );
+        console.log(response.data)
+         const data = response.data;
+          const dataForTip = {
+            level: data.level,
+            lang: data.lang,
+            technology: data.technology,
+          };
 
-      if (!userDataByApyKey)
+console.log(dataForTip);
+
+      if (!response)
         throw new HttpException('Invalid API key provided', 400);
 
       // TODO: cambiar URL
 
-      const tips = this.httpService
-        .get(
-          `http://localhost:3000/?level=${dataForTip.level}&?lang=${dataForTip.language}&?technology=${dataForTip.programmingLanguage}`,
-          {
-            headers: {
-              'x-api-key': process.env.API_KEY_IFRAME,
-            },
+      const urlTips = `${process.env.API_TIPS}all?page=1&limit=1&level=${dataForTip.level}&technology=${dataForTip.technology}`;
+
+      const responseTips = await firstValueFrom(
+        this.httpService.get(urlTips, {
+          headers: {
+            'x-api-key': process.env.API_KEY_IFRAME,
           },
-        )
-        .subscribe((response) => {
-          dataForResponse.push(response.data);
-        });
+        }),
+      );
+      dataForResponse.push(responseTips.data);
+        
+     console.log(responseTips.data)
 
-      if (!tips) throw new HttpException('Data of tips invalid', 400);
+      if (!responseTips) throw new HttpException('Data of tips invalid', 400);
 
-      return dataForResponse;
+      return responseTips.data;
     } catch (err) {
       throw new HttpException(
         `Error: ${err}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return [];
+    
   }
 
   findAll() {
     return `This action returns all iframe`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} iframe`;
-  }
 
-  update(id: number, updateIframeDto: UpdateIframeDto) {
-    console.log(updateIframeDto);
-    return `This action updates a #${id} iframe`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} iframe`;
-  }
 }

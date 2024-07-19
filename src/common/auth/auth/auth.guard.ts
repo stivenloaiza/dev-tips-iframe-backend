@@ -1,24 +1,46 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
-export class ApiKeyAuthGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
-
+export class ApiKeyGuard implements CanActivate {
+  constructor(private readonly httpService: HttpService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const apiKey = request.headers['x-api-key'];
+    console.log(apiKey);
 
     if (!apiKey) {
       throw new UnauthorizedException('API key is missing');
     }
 
-    const isValid = await this.authService.validateApiKey(apiKey);
+    const headers = {
+      'x-api-key': apiKey,
+    };
 
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid API key');
+    try {
+      const response = await lastValueFrom(
+        this.httpService.post(
+          'http://localhost:3004/api/api-keys/validate',
+          {key: apiKey},
+          { headers },
+        ),
+      );
+      console.log(response);
+
+      if (response.data === true) {
+        return true;
+      } else {
+        throw new UnauthorizedException('Invalid API key format');
+      }
+    } catch (error) {
+      throw new UnauthorizedException('Error validating API key');
     }
-
-    return true;
   }
 }
+
