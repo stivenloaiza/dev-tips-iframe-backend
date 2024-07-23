@@ -19,10 +19,10 @@ export class CreateIframeDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  programmingLanguage: string;
+  technology: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  language: string;
+  lang: string;
 }

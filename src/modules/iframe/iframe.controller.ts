@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
 import { IframeService } from './iframe.service';
@@ -17,20 +15,17 @@ import { ApiTags } from '@nestjs/swagger';
 export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
 
-  // @UseGuards(ApiKeyGuard)
+  @UseGuards(ApiKeyGuard)
   @Post('getIframe')
   create(@Body() createIframeDto: CreateIframeDto) {
     return this.iframeService.createCodeIframe(createIframeDto);
   }
-  // @UseGuards(ApiKeyGuard)
+  @UseGuards(ApiKeyGuard)
   @Get('iframeForFront/:apikeyUser')
   iframeForTheFront(@Param('apikeyUser') apiKeyUser: string) {
     return this.iframeService.iframeforTheFront(apiKeyUser);
   }
 
-  @Get()
-  findAll() {
-    return this.iframeService.findAll();
-  }
+
 
 }
