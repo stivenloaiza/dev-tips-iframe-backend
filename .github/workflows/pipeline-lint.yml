@@ -29,8 +29,10 @@ jobs:
       - name: Check commit message for skip-tests
         id: check_skip_tests
         run: |
-          if git log -1 --pretty=%B | grep -q '\[skip-tests\]'; then
-            echo "Skipping tests due to [skip-tests] tag in commit message"
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MESSAGE"
+
+          if echo "$COMMIT_MESSAGE" | grep -q '\[skip-tests\]'; then
             echo "RUN_TESTS=false" >> $GITHUB_ENV
           else
             echo "RUN_TESTS=true" >> $GITHUB_ENV
@@ -41,6 +43,8 @@ jobs:
 
       - name: Debug RUN_TESTS
         run: echo "RUN_TESTS is set to $RUN_TESTS"
+        env:
+          RUN_TESTS: ${{ env.RUN_TESTS }}
 
       - name: Run unit tests
         if: env.RUN_TESTS == 'true'
