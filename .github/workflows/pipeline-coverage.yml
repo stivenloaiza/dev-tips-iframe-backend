@@ -1,4 +1,4 @@
-name: Pipeline Lint
+name: Pipeline Coverage
 
 on:
   push:
@@ -11,14 +11,15 @@ on:
       - dev
 
 jobs:
-  lint:
+  coverage:
+    name: Coverage analysis
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20.10.0'
@@ -32,14 +33,9 @@ jobs:
           skip_tests=$(jq '.skipTests' skip-tests.config.json)
           echo "RUN_TESTS=${skip_tests}" >> $GITHUB_ENV
 
-      - name: Run linter
-        run: npm run lint
-
       - name: Debug RUN_TESTS
         run: echo "RUN_TESTS is set to $RUN_TESTS"
-        env:
-          RUN_TESTS: ${{ env.RUN_TESTS }}
 
-      - name: Run unit tests
+      - name: Run tests with coverage
         if: env.RUN_TESTS == 'true'
-        run: npm test
+        run: npm run test:cov
