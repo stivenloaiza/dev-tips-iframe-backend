@@ -29,10 +29,8 @@ jobs:
       - name: Check commit message for skip-tests
         id: check_skip_tests
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          echo "Commit message: $COMMIT_MESSAGE"
-
-          if echo "$COMMIT_MESSAGE" | grep -q '\[skip-tests\]'; then
+           if git rev-list -1 HEAD | xargs -I {} git log --format=%B -n 1 {} | grep -q '\[skip-tests\]'; then
+            echo "Skipping coverage analysis due to [skip-tests] tag in commit message"
             echo "RUN_TESTS=false" >> $GITHUB_ENV
           else
             echo "RUN_TESTS=true" >> $GITHUB_ENV
