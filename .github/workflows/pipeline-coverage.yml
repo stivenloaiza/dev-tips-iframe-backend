@@ -27,20 +27,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check commit message for skip-tests
-        id: check_skip_tests
+      - name: Read skip-tests configuration
+        id: read_config
         run: |
-          if git rev-list -1 HEAD | xargs -I {} git log --format=%B -n 1 {} | grep -q '\[skip-tests\]'; then
-            echo "Skipping coverage analysis due to [skip-tests] tag in commit message"
-            echo "RUN_TESTS=false" >> $GITHUB_ENV
-          else
-            echo "RUN_TESTS=true" >> $GITHUB_ENV
-          fi
+          skip_tests=$(jq '.skipTests' skip-tests.config.json)
+          echo "RUN_TESTS=${skip_tests}" >> $GITHUB_ENV
 
       - name: Debug RUN_TESTS
         run: echo "RUN_TESTS is set to $RUN_TESTS"
-        env:
-          RUN_TESTS: ${{ env.RUN_TESTS }}
 
       - name: Run tests with coverage
         if: env.RUN_TESTS == 'true'
