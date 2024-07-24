@@ -25,5 +25,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check commit message for skip-tests
+        id: check_skip_tests
+        run: |
+          if git log -1 --pretty=%B | grep -q '\[skip-tests\]'; then
+            echo "Skipping tests due to [skip-tests] tag in commit message"
+            echo "RUN_TESTS=false" >> $GITHUB_ENV
+          else
+            echo "RUN_TESTS=true" >> $GITHUB_ENV
+          fi
+
       - name: Run linter
         run: npm run lint
+
+      - name: Run unit tests
+      if: env.RUN_TESTS == 'true'
+        run: npm test

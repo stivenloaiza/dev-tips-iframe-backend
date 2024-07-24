@@ -1,0 +1,41 @@
+name: Pipeline Coverage
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  coverage:
+    name: Coverage analysis
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.10.0'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Check commit message for skip-tests
+        id: check_skip_tests
+        run: |
+          if git log -1 --pretty=%B | grep -q '\[skip-tests\]'; then
+            echo "Skipping coverage analysis due to [skip-tests] tag in commit message"
+            echo "RUN_TESTS=false" >> $GITHUB_ENV
+          else
+            echo "RUN_TESTS=true" >> $GITHUB_ENV
+          fi
+
+    - name: Run tests with coverage
+    if: env.RUN_TESTS == 'true'
+      run: npm run test:cov
