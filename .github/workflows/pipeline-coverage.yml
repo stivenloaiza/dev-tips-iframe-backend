@@ -37,9 +37,6 @@ jobs:
             echo "RUN_TESTS=true" >> $GITHUB_ENV
           fi
 
-      - name: Debug RUN_TESTS
-        run: echo "RUN_TESTS is set to $RUN_TESTS"
-
       - name: Run tests with coverage
         if: env.RUN_TESTS == 'true'
         run: npm run test:cov
