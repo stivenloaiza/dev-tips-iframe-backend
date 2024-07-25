@@ -11,6 +11,6 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [IframeController],
-  providers: [ IframeService ],
+  providers: [IframeService],
 })
 export class IframeModule {}

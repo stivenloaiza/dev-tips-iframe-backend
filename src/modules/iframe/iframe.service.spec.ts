@@ -49,7 +49,7 @@ describe('IframeService', () => {
         technology: 'testTech',
         seniority: 'senior',
         lang: 'en',
-        domain: ''
+        domain: '',
       };
 
       mockIframeModel.save.mockResolvedValue(mockIframeModel);
@@ -66,19 +66,23 @@ describe('IframeService', () => {
         technology: 'testTech',
         seniority: 'senior',
         lang: 'en',
-        domain: ''
+        domain: '',
       };
 
       mockIframeModel.save.mockRejectedValue(new Error('Database error'));
 
-      await expect(service.createCodeIframe(createIframeDto)).rejects.toThrow(HttpException);
+      await expect(service.createCodeIframe(createIframeDto)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 
   describe('iframeforTheFront', () => {
     it('should fetch data for the front', async () => {
       const apiKey = 'testApiKey';
-      const mockUserResponse = { data: { level: 'senior', lang: 'en', technology: 'testTech' } };
+      const mockUserResponse = {
+        data: { level: 'senior', lang: 'en', technology: 'testTech' },
+      };
       const mockTipsResponse = { data: ['tip1', 'tip2'] };
 
       mockHttpService.get.mockReturnValueOnce(of(mockUserResponse));
@@ -92,9 +96,13 @@ describe('IframeService', () => {
 
     it('should throw an HttpException if user data is invalid', async () => {
       const apiKey = 'invalidApiKey';
-      mockHttpService.get.mockReturnValueOnce(throwError(new Error('Invalid API key')));
+      mockHttpService.get.mockReturnValueOnce(
+        throwError(new Error('Invalid API key')),
+      );
 
-      await expect(service.iframeforTheFront(apiKey)).rejects.toThrow(HttpException);
+      await expect(service.iframeforTheFront(apiKey)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 });

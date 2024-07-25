@@ -13,7 +13,6 @@ export class IframeService {
     private readonly httpService: HttpService,
   ) {}
   async createCodeIframe(createIframeDto: CreateIframeDto) {
-
     const { apikey, technology, seniority, lang } = createIframeDto;
     try {
       let srcUrl = `http://localhost:5173/${apikey}`;
@@ -26,18 +25,18 @@ export class IframeService {
       if (lang) {
         srcUrl += `/${lang}`;
       }
-    
+
       const htmlIframe = `<iframe id="inlineFrameExample" title="Inline Frame Example" width="300" height="200" src="${srcUrl}"></iframe>`;
-    
+
       const iframe = {
-        apikey: apikey, 
+        apikey: apikey,
         iframe: htmlIframe,
-      }
-  
-      const createdIframe = new this.iframeModel( iframe );
-  
-      await createdIframe.save(); 
-  
+      };
+
+      const createdIframe = new this.iframeModel(iframe);
+
+      await createdIframe.save();
+
       return createdIframe;
     } catch (error) {
       throw new HttpException(
@@ -47,31 +46,29 @@ export class IframeService {
     }
   }
 
-   async iframeforTheFront(apiKey: string){
+  async iframeforTheFront(apiKey: string) {
     try {
-   
       const dataForResponse = [];
 
       // TODO: cambiar URL
-      const urlUser = `${process.env.API_USER}/${apiKey}`
+      const urlUser = `${process.env.API_USER}/${apiKey}`;
 
-          const response = await firstValueFrom(
-            this.httpService.get(urlUser, {
-              headers: {
-                'x-api-key': process.env.API_KEY_IFRAME,
-              },
-            }),
-          );
-      
-         const data = response.data;
-          const dataForTip = {
-            level: data.level,
-            lang: data.lang,
-            technology: data.technology,
-          };
+      const response = await firstValueFrom(
+        this.httpService.get(urlUser, {
+          headers: {
+            'x-api-key': process.env.API_KEY_IFRAME,
+          },
+        }),
+      );
 
-      if (!response)
-        throw new HttpException('Invalid API key provided', 400);
+      const data = response.data;
+      const dataForTip = {
+        level: data.level,
+        lang: data.lang,
+        technology: data.technology,
+      };
+
+      if (!response) throw new HttpException('Invalid API key provided', 400);
 
       // TODO: cambiar URL
 
@@ -95,8 +92,5 @@ export class IframeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    
   }
-
-
 }

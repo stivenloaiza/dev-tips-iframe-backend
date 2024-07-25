@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { IframeService } from './iframe.service';
 import { CreateIframeDto } from './dto/create-iframe.dto';
 import { ApiKeyGuard } from '../../common/auth/auth/auth.guard';
@@ -25,7 +18,4 @@ export class IframeController {
   iframeForTheFront(@Param('apikeyUser') apiKeyUser: string) {
     return this.iframeService.iframeforTheFront(apiKeyUser);
   }
-
-
-
 }

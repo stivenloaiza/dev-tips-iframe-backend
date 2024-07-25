@@ -49,7 +49,7 @@ describe('ApiKeyGuard', () => {
       expect(mockHttpService.post).toHaveBeenCalledWith(
         'https://dev-tips-auth-backend.onrender.com/api-keys/validate',
         { key: 'validApiKey' },
-        { headers: { 'x-api-key': 'validApiKey' } }
+        { headers: { 'x-api-key': 'validApiKey' } },
       );
       expect(result).toBe(true);
     });
@@ -64,7 +64,7 @@ describe('ApiKeyGuard', () => {
       } as ExecutionContext;
 
       await expect(guard.canActivate(context)).rejects.toThrowError(
-        'API key is missing'
+        'API key is missing',
       );
     });
 
@@ -82,7 +82,7 @@ describe('ApiKeyGuard', () => {
       mockHttpService.post.mockReturnValue(of({ data: false }));
 
       await expect(guard.canActivate(context)).rejects.toThrowError(
-        'Invalid API key format'
+        'Invalid API key format',
       );
     });
 
@@ -100,7 +100,7 @@ describe('ApiKeyGuard', () => {
       mockHttpService.post.mockReturnValue(throwError(new Error('API error')));
 
       await expect(guard.canActivate(context)).rejects.toThrowError(
-        'Error validating API key'
+        'Error validating API key',
       );
     });
   });

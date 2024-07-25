@@ -27,7 +27,7 @@ export class ApiKeyGuard implements CanActivate {
       const response = await lastValueFrom(
         this.httpService.post(
           'https://dev-tips-auth-backend.onrender.com/api-keys/validate',
-          {key: apiKey},
+          { key: apiKey },
           { headers },
         ),
       );
@@ -43,4 +43,3 @@ export class ApiKeyGuard implements CanActivate {
     }
   }
 }
-

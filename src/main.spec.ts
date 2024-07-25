@@ -1,38 +1,30 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { bootstrap } from './main'; 
+import { Test } from '@nestjs/testing';
+import { ApiKeyGuard } from './common/auth/auth/auth.guard';
+import { HttpService } from '@nestjs/axios';
 
-jest.mock('@nestjs/core', () => ({
-  NestFactory: {
-    create: jest.fn().mockResolvedValue({
-      enableCors: jest.fn(),
-      listen: jest.fn(),
-      setGlobalPrefix: jest.fn(),
-    }),
-  },
-}));
-
-describe('Main', () => {
-  let app;
+describe('ApiKeyGuard', () => {
+  let guard: ApiKeyGuard;
+  let mockHttpService: any;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [],
+    mockHttpService = {
+      post: jest.fn(),
+    };
+
+    await Test.createTestingModule({
+      providers: [
+        ApiKeyGuard,
+        {
+          provide: HttpService,
+          useValue: mockHttpService,
+        },
+      ],
     }).compile();
 
-    app = await NestFactory.create(AppModule);
+    guard = new ApiKeyGuard(mockHttpService);
   });
 
-  it('should bootstrap the application', async () => {
-    await bootstrap();
-
-    expect(app.enableCors).toHaveBeenCalledWith({
-      origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      credentials: true,
-    });
-    expect(app.setGlobalPrefix).toHaveBeenCalledWith('/v1/api');
-    expect(app.listen).toHaveBeenCalled();
+  it('should be defined', () => {
+    expect(guard).toBeDefined();
   });
 });

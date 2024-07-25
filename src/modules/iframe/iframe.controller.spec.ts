@@ -37,7 +37,7 @@ describe('IframeController', () => {
         technology: 'testTech',
         seniority: 'senior',
         lang: 'en',
-        domain: ''
+        domain: '',
       };
       const result = { iframe: '<iframe></iframe>' };
 
@@ -45,7 +45,9 @@ describe('IframeController', () => {
 
       const response = await controller.create(createIframeDto);
 
-      expect(mockIframeService.createCodeIframe).toHaveBeenCalledWith(createIframeDto);
+      expect(mockIframeService.createCodeIframe).toHaveBeenCalledWith(
+        createIframeDto,
+      );
       expect(response).toEqual(result);
     });
   });
@@ -59,7 +61,9 @@ describe('IframeController', () => {
 
       const response = await controller.iframeForTheFront(apiKeyUser);
 
-      expect(mockIframeService.iframeforTheFront).toHaveBeenCalledWith(apiKeyUser);
+      expect(mockIframeService.iframeforTheFront).toHaveBeenCalledWith(
+        apiKeyUser,
+      );
       expect(response).toEqual(result);
     });
   });
