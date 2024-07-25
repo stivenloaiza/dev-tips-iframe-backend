@@ -31,7 +31,6 @@ export class ApiKeyGuard implements CanActivate {
           { headers },
         ),
       );
-      console.log(response);
 
       if (response.data === true) {
         return true;
