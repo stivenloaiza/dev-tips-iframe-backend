@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
 } from '@nestjs/common';
 import { IframeService } from './iframe.service';
@@ -18,6 +16,7 @@ import { Iframe } from './entities/iframe.entity';
 export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
 
+  @UseGuards(ApiKeyGuard)
   @UseGuards(ApiKeyGuard)
   @Post('getIframe')
   @ApiOperation({ summary: "Create a new Iframe"})
@@ -51,25 +50,5 @@ export class IframeController {
     return this.iframeService.iframeforTheFront(apiKeyUser);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all IFrames' })
-  @ApiQuery({
-    name: 'searchTerm',
-    required: false,
-    description: 'Search term for filtering IFrames by name or description',
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of IFrames successfully retrieved.',
-    type: [Iframe],
-  })
-  @ApiResponse({ status: 404, description: 'No IFrames found.' })
-  @ApiBadRequestResponse({
-    description: "Invalid data or Iframe"
-  })
-  findAll() {
-    return this.iframeService.findAll();
-  }
-
+  
 }

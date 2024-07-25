@@ -1,11 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateIframeDto } from './dto/create-iframe.dto';
-import { UpdateIframeDto } from './dto/update-iframe.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Iframe } from './entities/iframe.entity';
 import { Model } from 'mongoose';
 import { HttpService } from '@nestjs/axios';
-import { response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -16,19 +14,22 @@ export class IframeService {
   ) {}
   async createCodeIframe(createIframeDto: CreateIframeDto) {
 
-    const { apikey, programmingLanguage, seniority, language } = createIframeDto;
+
+    const { apikey, technology, seniority, lang } = createIframeDto;
     const urlFront = process.env.URL_IFRAME_FRONT
      
     try {
       let srcUrl =   `${urlFront}/${apikey}`;
-      if (programmingLanguage) {
-        srcUrl += `/${programmingLanguage}`;
+      
+      if (technology) {
+        srcUrl += `/${technology}`;
+
       }
       if (seniority) {
         srcUrl += `/${seniority}`;
       }
-      if (language) {
-        srcUrl += `/${language}`;
+      if (lang) {
+        srcUrl += `/${lang}`;
       }
     
       const htmlIframe = `<iframe id="inlineFrameExample" title="Inline Frame Example" width="300" height="200" src="${srcUrl}"></iframe>`;
@@ -56,7 +57,6 @@ export class IframeService {
    
       const dataForResponse = [];
 
-      // TODO: cambiar URL
       const urlUser = `${process.env.API_USER}/${apiKey}`
 
           const response = await firstValueFrom(
@@ -66,7 +66,7 @@ export class IframeService {
               },
             }),
           );
-        console.log(response.data)
+      
          const data = response.data;
           const dataForTip = {
             level: data.level,
@@ -74,12 +74,9 @@ export class IframeService {
             technology: data.technology,
           };
 
-console.log(dataForTip);
-
       if (!response)
         throw new HttpException('Invalid API key provided', 400);
 
-      // TODO: cambiar URL
 
       const urlTips = `${process.env.API_TIPS}all?page=1&limit=1&level=${dataForTip.level}&technology=${dataForTip.technology}`;
 
@@ -91,8 +88,6 @@ console.log(dataForTip);
         }),
       );
       dataForResponse.push(responseTips.data);
-        
-     console.log(responseTips.data)
 
       if (!responseTips) throw new HttpException('Data of tips invalid', 400);
 
@@ -104,10 +99,6 @@ console.log(dataForTip);
       );
     }
     
-  }
-
-  findAll() {
-    return `This action returns all iframe`;
   }
 
 
