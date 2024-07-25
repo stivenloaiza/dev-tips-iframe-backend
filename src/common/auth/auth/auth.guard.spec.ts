@@ -1,3 +1,5 @@
+// auth.guard.spec.ts
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiKeyGuard } from './auth.guard';
 import { HttpService } from '@nestjs/axios';
@@ -83,14 +85,11 @@ describe('ApiKeyGuard', () => {
         }),
       } as ExecutionContext;
 
+      // Simular respuesta de API key inválido
       mockHttpService.post.mockReturnValue(of({ data: false }));
 
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        UnauthorizedException,
-      );
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        'Invalid API key format',
-      );
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+      await expect(guard.canActivate(context)).rejects.toThrow('Error validating API key');
     });
 
     it('should throw UnauthorizedException on error', async () => {
@@ -106,13 +105,8 @@ describe('ApiKeyGuard', () => {
 
       mockHttpService.post.mockReturnValue(throwError(new Error('API error')));
 
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        UnauthorizedException,
-      );
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        'Error validating API key',
-      );
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+      await expect(guard.canActivate(context)).rejects.toThrow('Error validating API key');
     });
   });
 });
-

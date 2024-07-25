@@ -2,15 +2,27 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IframeController } from './iframe.controller';
 import { IframeService } from './iframe.service';
 import { CreateIframeDto } from './dto/create-iframe.dto';
+import { ApiKeyGuard } from '../../common/auth/auth/auth.guard';
+import { HttpService } from '@nestjs/axios';  // Importa HttpService
 
 describe('IframeController', () => {
   let controller: IframeController;
   let mockIframeService: any;
+  let mockHttpService: any;
+  let mockApiKeyGuard: any;
 
   beforeEach(async () => {
     mockIframeService = {
       createCodeIframe: jest.fn(),
       iframeforTheFront: jest.fn(),
+    };
+
+    mockHttpService = {
+      // Aquí puedes agregar métodos mockeados si tu guardia los usa
+    };
+
+    mockApiKeyGuard = {
+      canActivate: jest.fn().mockResolvedValue(true), // Mockea el método canActivate
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +31,14 @@ describe('IframeController', () => {
         {
           provide: IframeService,
           useValue: mockIframeService,
+        },
+        {
+          provide: HttpService,
+          useValue: mockHttpService,
+        },
+        {
+          provide: ApiKeyGuard,
+          useValue: mockApiKeyGuard,
         },
       ],
     }).compile();
