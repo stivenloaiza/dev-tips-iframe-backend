@@ -4,11 +4,11 @@ import {
   Post,
   Body,
   Param,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { IframeService } from './iframe.service';
 import { CreateIframeDto } from './dto/create-iframe.dto';
-import { ApiKeyGuard } from 'src/common/auth/auth/auth.guard';
+// import { ApiKeyGuard } from 'src/common/auth/auth/auth.guard';
 import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Iframe } from './entities/iframe.entity';
 @ApiTags('iframe')
