@@ -16,7 +16,7 @@ import { Iframe } from './entities/iframe.entity';
 export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
 
-  @UseGuards(ApiKeyGuard)
+
   @UseGuards(ApiKeyGuard)
   @Post('getIframe')
   @ApiOperation({ summary: "Create a new Iframe"})
