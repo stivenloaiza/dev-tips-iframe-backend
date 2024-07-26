@@ -11,4 +11,3 @@ export class Iframe extends Document {
 }
 
 export const IframeSchema = SchemaFactory.createForClass(Iframe);
-

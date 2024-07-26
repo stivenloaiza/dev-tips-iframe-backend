@@ -14,7 +14,6 @@ export class IframeService {
   ) {}
   async createCodeIframe(createIframeDto: CreateIframeDto) {
 
-
     const { apikey, technology, seniority, lang } = createIframeDto;
     const urlFront = process.env.URL_IFRAME_FRONT
      
@@ -31,18 +30,18 @@ export class IframeService {
       if (lang) {
         srcUrl += `/${lang}`;
       }
-    
+
       const htmlIframe = `<iframe id="inlineFrameExample" title="Inline Frame Example" width="300" height="200" src="${srcUrl}"></iframe>`;
-    
+
       const iframe = {
-        apikey: apikey, 
+        apikey: apikey,
         iframe: htmlIframe,
-      }
-  
-      const createdIframe = new this.iframeModel( iframe );
-  
-      await createdIframe.save(); 
-  
+      };
+
+      const createdIframe = new this.iframeModel(iframe);
+
+      await createdIframe.save();
+
       return createdIframe;
     } catch (error) {
       throw new HttpException(
@@ -52,10 +51,10 @@ export class IframeService {
     }
   }
 
-   async iframeforTheFront(apiKey: string){
+  async iframeforTheFront(apiKey: string) {
     try {
-   
       const dataForResponse = [];
+
 
       const urlUser = `${process.env.API_USER}/${apiKey}`
 
@@ -98,8 +97,5 @@ export class IframeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    
   }
-
-
 }

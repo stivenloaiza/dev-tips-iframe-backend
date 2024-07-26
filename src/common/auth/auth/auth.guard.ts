@@ -24,10 +24,9 @@ export class ApiKeyGuard implements CanActivate {
     };
 
     try {
-      const authApiKey = process.env.API_KEY 
       const response = await lastValueFrom(
         this.httpService.post(
-          ` ${authApiKey} `,
+          'https://dev-tips-auth-backend.onrender.com/api-keys/validate',
           {key: apiKey},
           { headers },
         ),
