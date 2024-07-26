@@ -1,7 +1,18 @@
+
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  // UseGuards,
+} from '@nestjs/common';
+import { IframeService } from './iframe.service';
+import { CreateIframeDto } from './dto/create-iframe.dto';
+// import { ApiKeyGuard } from 'src/common/auth/auth/auth.guard';
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { IframeService } from './iframe.service';
 import { CreateIframeDto } from './dto/create-iframe.dto';
-import { ApiKeyGuard } from '../../common/auth/auth/auth.guard';
 import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Iframe } from './entities/iframe.entity';
 @ApiTags('iframe')
@@ -10,7 +21,7 @@ export class IframeController {
   constructor(private readonly iframeService: IframeService) {}
 
 
-  @UseGuards(ApiKeyGuard)
+  // @UseGuards(ApiKeyGuard)
   @Post('getIframe')
   @ApiOperation({ summary: "Create a new Iframe"})
   @ApiResponse({
@@ -25,7 +36,7 @@ export class IframeController {
   create(@Body() createIframeDto: CreateIframeDto) {
     return this.iframeService.createCodeIframe(createIframeDto);
   }
-  @UseGuards(ApiKeyGuard)
+  // @UseGuards(ApiKeyGuard)
   @Get('iframeForFront/:apikeyUser')
   @ApiOperation({ summary: 'Get IFrame for Frontend' })
   @ApiParam({
