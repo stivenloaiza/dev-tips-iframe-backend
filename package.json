@@ -69,8 +69,8 @@
       "/node_modules/",
       "/dist/",
       "/build/",
-      "/src/common/entities/",
-      "/src/modules/*/dto/",
+      "src/modules/iframe/entities",
+      "src/modules/iframe/dto",
       ".eslintrc.js",
       ".prettierrc"
     ],

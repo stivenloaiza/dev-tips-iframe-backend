@@ -14,7 +14,7 @@ import { HttpModule } from '@nestjs/axios';
     }),
     PersistenceModule,
     IframeModule,
-    HttpModule
+    HttpModule,
   ],
   controllers: [],
   providers: [],
