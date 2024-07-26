@@ -13,6 +13,7 @@ export class ApiKeyGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const apiKey = request.headers['x-api-key'];
+    console.log(apiKey);
 
     if (!apiKey) {
       throw new UnauthorizedException('API key is missing');
@@ -23,10 +24,9 @@ export class ApiKeyGuard implements CanActivate {
     };
 
     try {
-      const authApiKey = process.env.API_KEY 
       const response = await lastValueFrom(
         this.httpService.post(
-          ` ${authApiKey} `,
+          'https://dev-tips-auth-backend.onrender.com/api-keys/validate',
           {key: apiKey},
           { headers },
         ),
@@ -42,3 +42,4 @@ export class ApiKeyGuard implements CanActivate {
     }
   }
 }
+

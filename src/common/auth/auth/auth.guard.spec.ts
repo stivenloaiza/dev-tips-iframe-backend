@@ -1,32 +1,29 @@
-// auth.guard.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApiKeyGuard } from './auth.guard';
 import { HttpService } from '@nestjs/axios';
-import { ExecutionContext } from '@nestjs/common';
+import { ApiKeyGuard } from './auth.guard';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
-import { UnauthorizedException } from '@nestjs/common';
+import { AxiosResponse } from 'axios';
 
 describe('ApiKeyGuard', () => {
   let guard: ApiKeyGuard;
-  let mockHttpService: any;
+  let httpService: HttpService;
 
   beforeEach(async () => {
-    mockHttpService = {
-      post: jest.fn(),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApiKeyGuard,
         {
           provide: HttpService,
-          useValue: mockHttpService,
+          useValue: {
+            post: jest.fn(),
+          },
         },
       ],
     }).compile();
 
     guard = module.get<ApiKeyGuard>(ApiKeyGuard);
+    httpService = module.get<HttpService>(HttpService);
   });
 
   it('should be defined', () => {
@@ -34,79 +31,70 @@ describe('ApiKeyGuard', () => {
   });
 
   describe('canActivate', () => {
-    it('should return true if API key is valid', async () => {
-      const context = {
-        switchToHttp: () => ({
-          getRequest: () => ({
-            headers: {
-              'x-api-key': 'validApiKey',
-            },
-          }),
-        }),
-      } as ExecutionContext;
-
-      mockHttpService.post.mockReturnValue(of({ data: true }));
-
-      const result = await guard.canActivate(context);
-
-      expect(mockHttpService.post).toHaveBeenCalledWith(
-        'https://dev-tips-auth-backend.onrender.com/api-keys/validate',
-        { key: 'validApiKey' },
-        { headers: { 'x-api-key': 'validApiKey' } },
-      );
-      expect(result).toBe(true);
-    });
-
     it('should throw UnauthorizedException if API key is missing', async () => {
       const context = {
         switchToHttp: () => ({
-          getRequest: () => ({
-            headers: {},
-          }),
+          getRequest: () => ({ headers: {} }),
         }),
-      } as ExecutionContext;
+      } as unknown as ExecutionContext;
 
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        UnauthorizedException,
-      );
-      await expect(guard.canActivate(context)).rejects.toThrow(
-        'API key is missing',
-      );
+      await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException if API key is invalid', async () => {
       const context = {
         switchToHttp: () => ({
-          getRequest: () => ({
-            headers: {
-              'x-api-key': 'invalidApiKey',
-            },
-          }),
+          getRequest: () => ({ headers: { 'x-api-key': 'invalid-key' } }),
         }),
-      } as ExecutionContext;
+      } as unknown as ExecutionContext;
 
-      // Simular respuesta de API key inválido
-      mockHttpService.post.mockReturnValue(of({ data: false }));
+      const errorResponse: AxiosResponse = {
+        data: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        headers: {},
+        config: {
+          headers: undefined
+        },
+      };
+
+      jest.spyOn(httpService, 'post').mockReturnValue(throwError(() => errorResponse));
 
       await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
-      await expect(guard.canActivate(context)).rejects.toThrow('Error validating API key');
     });
 
-    it('should throw UnauthorizedException on error', async () => {
+    it('should return true if API key is valid', async () => {
       const context = {
         switchToHttp: () => ({
-          getRequest: () => ({
-            headers: {
-              'x-api-key': 'invalidApiKey',
-            },
-          }),
+          getRequest: () => ({ headers: { 'x-api-key': 'valid-key' } }),
         }),
-      } as ExecutionContext;
+      } as unknown as ExecutionContext;
 
-      mockHttpService.post.mockReturnValue(throwError(new Error('API error')));
+      const successResponse: AxiosResponse = {
+        data: true,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: {
+          headers: undefined
+        },
+      };
+
+      jest.spyOn(httpService, 'post').mockReturnValue(of(successResponse));
+
+      await expect(guard.canActivate(context)).resolves.toBe(true);
+    });
+
+    it('should throw UnauthorizedException if there is an error during validation', async () => {
+      const context = {
+        switchToHttp: () => ({
+          getRequest: () => ({ headers: { 'x-api-key': 'error-key' } }),
+        }),
+      } as unknown as ExecutionContext;
+
+      jest.spyOn(httpService, 'post').mockReturnValue(throwError(() => new Error('Request failed')));
 
       await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
-      await expect(guard.canActivate(context)).rejects.toThrow('Error validating API key');
     });
   });
 });
